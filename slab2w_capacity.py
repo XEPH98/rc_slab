@@ -15,8 +15,8 @@ print(f"==== MATERIAL PROPERTIES ====\nfc = {fc}MPa, fy = {fy}MPa, fyt = {fyt}MP
 #Geometry
 print("===== BEAM INFO =====")
 beam_name = "S1"
-bw = 2700         #beam width, mm
-h = 150        #beam height, mm
+bw = 2500         #beam width, mm
+h = 125        #beam height, mm
 ln = 5400       #beam clear span, mm
 print("bw = " + str(bw) + ", h = " + str(h) + ", ln = " + str(ln))
 #Tensile Reinforcement Detail
