@@ -14,25 +14,14 @@ fyt = 230       #steel yield strength of ties, MPa
 Es = 200000     #Steel Elasticity, GPa
 print(f"==== MATERIAL PROPERTIES ====\nfc = {fc}MPa, fy = {fy}MPa, fyt = {fyt}MPa, ")
 
-#Geometry
-print("===== BEAM INFO =====")
-beam_name = "S1"
-bw = 2800      #beam width, mm
-h = 175        #beam height, mm
-ln = 5400       #beam clear span, mm
-print("bw = " + str(bw) + ", h = " + str(h) + ", ln = " + str(ln))
-
 #Tensile Reinforcement Detail
-d_main = 12     #diameter of main bars, mm
-d_tie = 12      #diameter of tie bars, mm
-n_tieleg = 2    #no. of tie legs
-s = 200         #spacing of transv. reinf, mm
-sc = 25         #steel cover
+xd_main = 12     #diameter of main bars, mm
+xd_tie = 12      #diameter of tie bars, mm
+xn_tieleg = 2    #no. of tie legs
+xs = 200         #spacing of transv. reinf, mm
+xsc = 25         #steel cover
 
-#Check for max number of bars in a layer
-nbar_bot = round((bw-sc*2-d_tie*2+25)/(25+d_main))       #Check for max number of bars in a layer
-
-def MomentCap(bw,layer, n1, n2, Mu):
+def MomentCap(bw,h,d_main,d_tie,sc,layer, n1, n2, Mu):
     if layer > 1:
         As1 = n1*pi*0.25*d_main**2
         As2 = n2*pi*0.25*d_main**2
