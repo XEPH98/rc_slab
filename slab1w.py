@@ -193,6 +193,16 @@ def MomentCap(bw,h,layer, n1, n2, Mu):
     phiMn = rd(phi()*Mn) #kN-m
     if phiMn > Mu:
         print(f"5. phiMn = {phiMn}kNm ({kNm_to_kipft(phiMn)}kipft) > Mu = {Mu}kNm ({kNm_to_kipft(Mu)}kipft). SAFE!")
+        #Check for rho_min
+        if 0.002 < rho_act: #rho_min = 0.002
+            pass
+        else:
+            exit("NON COMPLIANT WITH RHO_MIN (0.002)")
+        #Check for max spacing
+        if s2 < int(min(5*h,450)): #max spacing per  24.4.3.2-3
+            pass
+        else:
+            exit("NON COMPLIANT WITH MAX SPACING (5*h, 450)")
     else:
         print(f"5. phiMn = {phiMn}kNm ({kNm_to_kipft(phiMn)}kipft) < Mu = {Mu}kNm ({kNm_to_kipft(Mu)}kipft). UNSAFE!")
         exit("***** PROGRAM TERMINATED *****")
