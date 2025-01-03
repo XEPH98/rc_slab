@@ -45,11 +45,15 @@ class Slab:
         self.thk = thk
     def Ics(self):
         return self.W*self.thk**3/12
+    def beta(self):
+        """
+        Returns: ratio of longer to shorter slab clear span.
+        """
+        return round(self.L / self.W,2) 
 
-S1 = Slab("S1",2000,1000,125)
+S1 = Slab("S1",6850,1200,100)
 print(f"Initial Slab Geometric Properties\n L = {S1.L}mm, W = {S1.W}mm, thk = {S1.thk}mm.")
-beta = S1.L / S1.W #Ratio of longer to shorter slab dim
-print(f"Ratio of longer to shorter slab clear span: {rd(beta)}")
+print(f"Ratio of longer to shorter slab clear span: {S1.beta()}")
 
 #Geometry & material properties
 fc = 27 #MPa
@@ -58,16 +62,14 @@ Es = 200000 #MPa
 
 #Tensile Reinforcement Detail
 d_main = 12     #diameter of main bars, mm
-d_tie = 12      #diameter of tie bars, mm
-n_tieleg = 2    #no. of tie legs
 sc = 25         #steel cover
 
 #Applied Loads
 DL = rd(24*S1.thk*.001 + 2.1) #selfweight of slab, kPa
-LL = 4.0 #kPa
+LL = 2.4 #kPa
 qa = DL + LL #kPa
 qu = 1.2*DL + 1.6*LL #kPa 
-Mu = rd(qu*(S1.L*0.001)**2 / 8) #kN-m
+Mu = rd(qu*(S1.W*0.001)**2 / 8) #kN-m
 
 print(f"1. DL = {DL}kPa ({kPa_to_psf(DL)}psf) | LL = {LL}kPa ({kPa_to_psf(LL)}psf)")
 print(f"2. Service Uniform Pressure, qa = {rd(qa)}kPa ({kPa_to_psf(qa)}psf)")
@@ -118,7 +120,7 @@ def tempBars(ht:int,bw:int,rho_act:float,spacing):
     """
     print("=== TEMP & SHRINK BARS (24.4.3.2-3)===")
     rho_min = 0.002
-    d_tns = 10 #mm, dia of temp&shrnk bars
+    d_tns = 12 #mm, dia of temp&shrnk bars
     if rho_min < rho_act:
         print(f"1a. rho_act > rho_min | {rho_act} > {rho_min}")
         print("1b. rho_act above minimum. OKAY!")
@@ -147,16 +149,16 @@ def MomentCap(bw,h,layer, n1, n2, Mu):
         As2 = n2*pi*0.25*d_main**2
         As = rd(As1 + As2)
         y = (As1*0 + As2*(d_main + 25))/As
-        dt = h - sc - d_tie - d_main/2      #reinforcement farthest from the compression face
+        dt = h - sc - d_main/2      #reinforcement farthest from the compression face
         d = rd(dt - y)                          #centroid of steel
         print(f"1. dmain = {d_main} | n1 = {n1}pcs, n2 = {n2}pcs | d = {d}mm")
     else:
-        dt = h - sc - d_tie - d_main/2      #reinforcement farthest from the compression face
+        dt = h - sc - d_main/2      #reinforcement farthest from the compression face
         d = dt                              #centroid of steel
         As = rd( pi*d_main**2*0.25*n1 )
         print(f"1. dmain = {d_main} | n = {n1}pcs | dt = {dt}mm")
     
-    s2 = round((bw-sc*2-d_tie*2)/(n1-1))        #spacing of the long reinf., mm
+    s2 = round((bw)/(n1))        #spacing of the long reinf., mm
     print(f"2. As = {As}mm2 | spacing (mainbar) = {s2}mm.")
     #Beta Factor
     if fc <= 28:
@@ -208,12 +210,12 @@ def MomentCap(bw,h,layer, n1, n2, Mu):
         exit("***** PROGRAM TERMINATED *****")
     return Mn, phiMn, d, s2, n1, n2, layer, rho_act
 
-S1_cap = MomentCap(S1.W,S1.thk,1,5,0,Mu)
-S1_temp = tempBars(S1.thk,S1.W,S1_cap[7],S1_cap[3])
-S1_minThk = minThk(1,S1.L,fy)
+S1_cap = MomentCap(1000,S1.thk,1,4,0,Mu)
+S1_temp = tempBars(S1.thk,1000,S1_cap[7],S1_cap[3])
+S1_minThk = minThk(3,S1.W,fy)
 
 print("=== SUMMARY ===")
-print(f"Design of 1Way Slab for max span: {S1.L}mm")
+print(f"Design of 1Way Slab for max span: {S1.W}mm")
 print(f"Governing Slab Thickness: {S1.thk}mm")
 print(f"Main reinf. bars: {d_main}mm dia., spaced at {S1_cap[3]}mm")
 print(f"Temp. bars: {S1_temp[2]}mm dia., spaced at {S1_temp[3]}mm")

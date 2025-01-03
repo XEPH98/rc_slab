@@ -25,7 +25,12 @@ def k_eneg_cs(beta_t,a_l2ol1,l2ol1):
         y = [0.90,0.45]
         f = interp1d(x,y)
         x_interp = l2ol1
-        y_interp = f(x_interp)
+        if x_interp < 0.50:
+            y_interp = 0.90
+        elif x_interp > 0.50 and x_interp < 2.00:
+            y_interp = f(x_interp)
+        elif x_interp >= 2.00:
+            y_interp = 0.45
         k_eneg_cs = round(float(y_interp),2)
     #print(f"k_eneg_cs = {k_eneg_cs} per T8.10.5.2")
     return k_eneg_cs
@@ -50,7 +55,12 @@ def k_poss_cs(a_l2ol1,l2ol1):
         y = [0.90,0.45]
         f = interp1d(x,y)
         x_interp = l2ol1
-        y_interp = f(x_interp)
+        if x_interp < 0.50:
+            y_interp = 0.90
+        elif x_interp > 0.50 and x_interp < 2.00:
+            y_interp = f(x_interp)
+        elif x_interp >= 2.00:
+            y_interp = 0.45
         k_poss_cs = round(float(y_interp),2)
     #print(f"k_poss_cs = {k_poss_cs} per T8.10.5.5")
     return k_poss_cs
@@ -75,7 +85,12 @@ def k_ineg_cs(a_l2ol1,l2ol1):
         y = [0.90,0.45]
         f = interp1d(x,y)
         x_interp = l2ol1
-        y_interp = f(x_interp)
+        if x_interp < 0.50:
+            y_interp = 0.90
+        elif x_interp > 0.50 and x_interp < 2.00:
+            y_interp = f(x_interp)
+        elif x_interp >= 2.00:
+            y_interp = 0.45
         k_ineg_cs = round(float(y_interp),2)
     #print(f"k_ineg_cs = {k_ineg_cs} per T8.10.5.1")
     return k_ineg_cs
